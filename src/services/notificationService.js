@@ -1,5 +1,6 @@
-// notificationService.js — Optional owner notification client (safe on Firebase Spark free plan)
-// Gracefully skips requests when VITE_NOTIFICATION_ENDPOINT is not configured.
+// notificationService.js — Optional Render Express backend notification client (Spark-safe)
+// Calls ${VITE_API_BASE_URL}/api/auth/register-event or /api/auth/login-event when configured.
+// Gracefully skips requests when VITE_API_BASE_URL is missing.
 // Never sends notifications on browser refresh or automatic session restoration.
 
 const SENT_EVENTS_STORAGE_KEY = 'hlw_sent_auth_events';
@@ -25,9 +26,14 @@ export function buildAuthEventId(uid, eventType, salt = Date.now()) {
   return `${uid}_${eventType}_${salt}`;
 }
 
+export function getApiBaseUrl() {
+  const raw = (import.meta.env?.VITE_API_BASE_URL ?? '').trim().replace(/\/+$/, '');
+  if (!raw || raw.includes('your-render') || raw.includes('your-project-id')) return '';
+  return raw;
+}
+
 export function isNotificationEndpointConfigured() {
-  const endpoint = (import.meta.env?.VITE_NOTIFICATION_ENDPOINT ?? '').trim();
-  return Boolean(endpoint && !endpoint.includes('your-project-id'));
+  return Boolean(getApiBaseUrl());
 }
 
 export async function notifyOwnerAuthEvent({ user, eventType, provider, eventId }) {
@@ -35,8 +41,8 @@ export async function notifyOwnerAuthEvent({ user, eventType, provider, eventId 
     return { ok: false, skipped: true, reason: 'missing_params' };
   }
 
-  const endpoint = (import.meta.env?.VITE_NOTIFICATION_ENDPOINT ?? '').trim();
-  if (!endpoint || endpoint.includes('your-project-id')) {
+  const baseUrl = getApiBaseUrl();
+  if (!baseUrl) {
     return { ok: false, skipped: true, reason: 'endpoint_not_configured' };
   }
 
@@ -46,9 +52,13 @@ export async function notifyOwnerAuthEvent({ user, eventType, provider, eventId 
     return { ok: true, duplicate: true };
   }
 
+  const path = eventType === 'NEW_REGISTRATION'
+    ? '/api/auth/register-event'
+    : '/api/auth/login-event';
+
   try {
     const idToken = await user.getIdToken();
-    const res = await fetch(endpoint, {
+    const res = await fetch(`${baseUrl}${path}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,13 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { getApiBaseUrl } from '../../services/notificationService.js';
 import '../Auth/AuthPages.css';
-
-function getAdminEndpoint() {
-  const endpoint = (import.meta.env?.VITE_ADMIN_ENDPOINT ?? '').trim();
-  if (!endpoint || endpoint.includes('your-project-id')) return '';
-  return endpoint;
-}
 
 export default function AdminDashboard() {
   const { user, isOwner } = useAuth();
@@ -15,7 +10,8 @@ export default function AdminDashboard() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const adminEndpoint = getAdminEndpoint();
+  const apiBaseUrl = getApiBaseUrl();
+  const adminEndpoint = apiBaseUrl ? `${apiBaseUrl}/api/admin/overview` : '';
 
   useEffect(() => {
     if (!isOwner || !user || !adminEndpoint) return;
@@ -79,7 +75,7 @@ export default function AdminDashboard() {
         {!adminEndpoint && (
           <div className="auth-banner" style={{ marginTop: 16 }}>
             <strong>Owner notification &amp; backend analytics services are not configured yet.</strong>{' '}
-            Your Firebase Authentication and individual Firestore game saves work normally on the Firebase Spark free plan. Add a backend <code>VITE_ADMIN_ENDPOINT</code> later if you enable owner backend analytics.
+            Your Firebase Authentication and individual Firestore game saves work normally on the Firebase Spark free plan. Configure <code>VITE_API_BASE_URL</code> pointing to your Render backend to enable owner notifications and dashboard analytics.
           </div>
         )}
 

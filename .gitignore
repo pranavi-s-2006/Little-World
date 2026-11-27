@@ -16,6 +16,8 @@ dist-ssr
 functions/.env
 functions/node_modules
 .firebase
+backend/.env
+backend/node_modules
 
 # Editor directories and files
 .vscode/*
