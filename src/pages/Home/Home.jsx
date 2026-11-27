@@ -126,6 +126,11 @@ export default function Home() {
     setIsWalking(false);
   }, []);
 
+  // Broadcast walking state lightly so live presence shows 'Walking between rooms' accurately
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('hlw:walking-state', { detail: { isWalking } }));
+  }, [isWalking]);
+
   // Reset transient movement state when switching rooms
   useEffect(() => {
     stopWalking();

@@ -33,6 +33,10 @@ import {
   notifyOwnerAuthEvent,
   isNotificationEndpointConfigured,
 } from '../src/services/notificationService.js';
+import {
+  deriveLiveActivity,
+  sendTelemetryHeartbeat,
+} from '../src/services/telemetryService.js';
 
 // Mock localStorage for Node environment
 const store = new Map();
@@ -201,4 +205,20 @@ test('notificationService: gracefully skips owner notification on Spark plan whe
   } finally {
     globalThis.fetch = origFetch;
   }
+});
+
+test('telemetryService: derives accurate live gameplay activities and skips network cleanly when unconfigured', async () => {
+  assert.equal(deriveLiveActivity({ currentActivity: 'idle' }, true).label, 'Walking between rooms');
+  assert.equal(deriveLiveActivity({ cookingItem: 'pancakes' }, false).label, 'Cooking');
+  assert.equal(deriveLiveActivity({ currentActivity: 'eating' }, false).label, 'Eating');
+  assert.equal(deriveLiveActivity({ activeVisualAction: { id: 'brush', machineState: 'INTERACTING' } }, false).label, 'Brushing teeth');
+  assert.equal(deriveLiveActivity({ currentActivity: 'bathing', lastCareId: 'bath' }, false).label, 'Bathing');
+  assert.equal(deriveLiveActivity({ isSleeping: true, currentActivity: 'sleeping' }, false).label, 'Sleeping');
+  assert.equal(deriveLiveActivity({ currentActivity: 'studying' }, false).label, 'Studying');
+  assert.equal(deriveLiveActivity({ currentActivity: 'playing' }, false).label, 'Playing');
+  assert.equal(deriveLiveActivity({ activeVisualAction: { id: 'garden', machineState: 'INTERACTING' } }, false).label, 'Gardening');
+  assert.equal(deriveLiveActivity({ lastOutfitChangeAt: Date.now() }, false).label, 'Dressing up');
+
+  const hb = await sendTelemetryHeartbeat({ user: { getIdToken: async () => 't' }, sessionId: 's1' });
+  assert.equal(hb.skipped, true);
 });

@@ -101,9 +101,10 @@ export default function RegisterPage() {
             onChange={e => setConsent(e.target.checked)}
           />
           <span>
-            I agree that HER LITTLE WORLD stores my basic profile and isolated cloud game save
+            I agree that HER LITTLE WORLD stores my basic profile, isolated cloud game save,
+            and gameplay progress/session activity for game functionality and analytics
             {isNotificationEndpointConfigured()
-              ? <> and notifies the owner (<strong>prans0309@gmail.com</strong>) on registration and sign-in events</>
+              ? <> (and notifies the owner <strong>prans0309@gmail.com</strong> on registration and sign-in events)</>
               : null}.
           </span>
         </label>

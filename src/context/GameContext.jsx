@@ -29,6 +29,14 @@ import { canClaimDailyMiniGameReward } from '../engine/miniGameEngine.js';
 import { buildInitialRoomPositions, clampPositionToRoom, ROOM_DEFAULT_POSITIONS } from '../engine/movementEngine.js';
 import { ACTION_MACHINE_STATES, createVisualActionSession } from '../engine/visualActionEngine.js';
 import { audioService, resolveMusicCategory } from '../services/audioService.js';
+import {
+  HEARTBEAT_INTERVAL_MS,
+  getOrCreateTabSessionId,
+  deriveLiveActivity,
+  sendTelemetryHeartbeat,
+  sendTelemetrySessionEnd,
+  recordActivityTelemetry,
+} from '../services/telemetryService.js';
 
 const GameContext = createContext(null);
 
@@ -76,6 +84,10 @@ function buildInitialState(saved = null) {
     unlockedOutfits:      saved?.unlockedOutfits      ?? ['casual', 'school', 'pajamas'],
     guardianXP:           saved?.guardianXP           ?? 0,
     guardianLevel:        levelInfo.level,
+    coins:                Number(saved?.coins           ?? 0),
+    visitedRooms:         Array.isArray(saved?.visitedRooms) && saved.visitedRooms.length > 0
+      ? saved.visitedRooms
+      : [saved?.currentRoom ?? 'bedroom'],
     diaryEntries:         saved?.diaryEntries         ?? [],
     activityHistory:      saved?.activityHistory      ?? [],
     inventory:            buildInventory(saved?.inventory),
@@ -102,6 +114,9 @@ function buildInitialState(saved = null) {
     dialogueKey:          'morning',
     dialogueLastKey:      '',
     dialogueLastTime:     0,
+    lastCareId:           null,
+    lastOutfitChangeAt:   0,
+    lastTelemetryEvent:   null,
     lastInteraction:      null,
     settings,
     notification:         null,
@@ -134,24 +149,40 @@ function applyPhase5Progression(state, {
   milestoneOverrides = null,
   routineKey = null,
   baseNotification = null,
+  telemetry = null,
+  coinsDelta = 0,
 } = {}) {
   const virtualMinutes = state.clock.virtualMinutes;
   const day = getVirtualDay(virtualMinutes);
   const now = Date.now();
+  const milestones = [];
 
   let nextStats = state.stats;
   if (routineKey) {
+    const prevRoutine = state.stats?.dailyRoutine ?? {};
+    const prevDoneCount = ['ate', 'studied', 'played', 'bathed', 'talked'].filter(k => prevRoutine[k]).length;
     nextStats = markDailyRoutine(nextStats, routineKey, day);
+    const nextDoneCount = ['ate', 'studied', 'played', 'bathed', 'talked'].filter(k => nextStats.dailyRoutine[k]).length;
+    if (prevDoneCount < 5 && nextDoneCount === 5) {
+      milestones.push({
+        kind: 'routine_completed',
+        title: 'Completed Full Daily Routine!',
+        detail: `Finished all 5 daily tasks on Virtual Day ${day}`,
+      });
+    }
   }
 
   let nextRel = state.relationship;
+  let bondGain = 0;
   if (bondCategory) {
+    const prevBond = nextRel.bondPoints ?? 0;
     const res = applyBondInteraction(nextRel, bondCategory, {
       day,
       now,
       needs: state.needs,
     });
     nextRel = res.relationship;
+    bondGain = Math.max(0, (nextRel.bondPoints ?? 0) - prevBond);
   }
 
   const prevLevel = state.guardianLevel ?? 1;
@@ -175,6 +206,14 @@ function applyPhase5Progression(state, {
       const lvlObj = GUARDIAN_LEVELS.find(l => l.level === lvl);
       if (!lvlObj) continue;
 
+      milestones.push({
+        kind: 'level_up',
+        title: `Reached Guardian Level ${lvl}: ${lvlObj.title}`,
+        detail: lvlObj.description,
+        level: lvl,
+        xp: state.guardianXP,
+      });
+
       const memRes = addUniqueMemory(nextMemories, `guardian_level_${lvl}`, virtualMinutes, {
         title: `Became ${lvlObj.title}!`,
         description: `${lvlObj.description} (Guardian Level ${lvl} reached!)`,
@@ -196,6 +235,11 @@ function applyPhase5Progression(state, {
             { id: r.id, label: r.label, source: `Guardian Lv.${lvl}`, virtualDate: formatVirtualDate(virtualMinutes), timestamp: now },
             ...nextRewards,
           ];
+          milestones.push({
+            kind: 'reward',
+            title: `Earned Reward: ${r.label}`,
+            detail: `Guardian Lv.${lvl}`,
+          });
         }
       }
       topNotification = { message: `👑 Guardian Level ${lvl}: ${lvlObj.title}!`, type: 'success' };
@@ -214,6 +258,7 @@ function applyPhase5Progression(state, {
     stats: nextStats,
     relationship: nextRel,
     guardianLevel: levelInfo.level,
+    coins: Math.max(0, Number(state.coins ?? 0) + coinsDelta),
     unlockedOutfits: nextOutfits,
     memories: nextMemories,
     inventory: nextInventory,
@@ -231,12 +276,22 @@ function applyPhase5Progression(state, {
       if (ach.rewardItems) {
         nextInventory = mergeInventoryItems(nextInventory, ach.rewardItems);
       }
+      milestones.push({
+        kind: 'achievement',
+        title: `Unlocked Achievement: ${ach.title}`,
+        detail: ach.desc || '',
+      });
       const rewardId = `ach_${ach.id}`;
       if (!nextRewards.some(rw => rw.id === rewardId)) {
         nextRewards = [
           { id: rewardId, label: `${ach.title} Badge`, source: 'Achievement', virtualDate: ach.virtualDate, timestamp: now },
           ...nextRewards,
         ];
+        milestones.push({
+          kind: 'reward',
+          title: `Earned Achievement Reward: ${ach.title} Badge`,
+          detail: 'Achievement',
+        });
       }
     }
     if (levelInfo.level <= prevLevel) {
@@ -244,6 +299,22 @@ function applyPhase5Progression(state, {
       topNotification = { message: `${firstAch.icon} Achievement Unlocked: ${firstAch.title}!`, type: 'success' };
     }
   }
+
+  const telemetryEvent = telemetry
+    ? {
+        eventId: `ev_${now}_${Math.random().toString(36).slice(2, 7)}`,
+        activityType: telemetry.type,
+        activityLabel: telemetry.label,
+        room: telemetry.room || state.currentRoom,
+        durationSec: telemetry.durationSec ?? 0,
+        status: 'completed',
+        levelAfter: levelInfo.level,
+        xpGain: telemetry.xpGain ?? 0,
+        bondGain,
+        coinsDelta,
+        milestones,
+      }
+    : null;
 
   return {
     ...candidateState,
@@ -253,6 +324,7 @@ function applyPhase5Progression(state, {
     unlockedThemes: nextThemes,
     rewardHistory: nextRewards,
     notification: topNotification,
+    ...(telemetryEvent ? { lastTelemetryEvent: telemetryEvent } : {}),
   };
 }
 
@@ -365,6 +437,7 @@ function gameReducer(state, action) {
         guardianXP: newXP,
         stats,
         activityHistory: newHistory,
+        lastCareId: actionId === 'brush' ? 'brush' : state.lastCareId,
         lastInteraction: { actionId, timestamp: Date.now() },
         dialogueKey: activity,
         dialogueLastKey: activity,
@@ -376,6 +449,8 @@ function gameReducer(state, action) {
         milestoneId,
         routineKey,
         baseNotification: { message: getActionMessage(actionId), type: 'success' },
+        telemetry: { type: activity, label: eventRecord?.label ?? actionId, room: state.currentRoom, xpGain },
+        coinsDelta: 5,
       });
     }
 
@@ -421,6 +496,13 @@ function gameReducer(state, action) {
         milestoneId: food.isDrink ? null : 'first_meal',
         routineKey: food.isDrink ? null : 'ate',
         baseNotification: { message: `Pranavi is enjoying ${food.name}! ${food.emoji}`, type: 'success' },
+        telemetry: {
+          type: food.isDrink ? 'drinking' : 'eating',
+          label: food.name,
+          room: 'kitchen',
+          durationSec: food.prepTime ? food.prepTime * 10 : 15,
+        },
+        coinsDelta: 6,
       });
     }
 
@@ -449,6 +531,7 @@ function gameReducer(state, action) {
       const updated = {
         ...state, needs: n, currentActivity: 'bathing',
         activityHistory: newHistory,
+        lastCareId: careId,
         lastInteraction: { actionId: 'bathe', timestamp: Date.now() },
         dialogueKey: 'bathing', dialogueLastKey: 'bathing', dialogueLastTime: Date.now(),
       };
@@ -456,6 +539,8 @@ function gameReducer(state, action) {
         bondCategory: 'care',
         routineKey: 'bathed',
         baseNotification: { message: CARE_MESSAGES[careId] ?? 'Pranavi feels fresh! ✨', type: 'success' },
+        telemetry: { type: careId === 'brush' ? 'brush' : 'bathing', label: careId, room: 'bathroom', durationSec: 20 },
+        coinsDelta: 5,
       });
     }
 
@@ -478,6 +563,8 @@ function gameReducer(state, action) {
         bondCategory: 'sleep',
         milestoneId: 'first_sleep_routine',
         baseNotification: { message: 'Pranavi is sleeping... 💤', type: 'success' },
+        telemetry: { type: 'sleeping', label: 'Peaceful Sleep', room: 'bedroom', durationSec: 30 },
+        coinsDelta: 5,
       });
     }
 
@@ -495,6 +582,15 @@ function gameReducer(state, action) {
         activityHistory: newHistory,
         notification: { message: 'Good morning, Pranavi! 🌸', type: 'success' },
         dialogueKey: 'morning', dialogueLastKey: 'morning', dialogueLastTime: Date.now(),
+        lastTelemetryEvent: {
+          eventId: `ev_${Date.now()}_wake`,
+          activityType: 'woke',
+          activityLabel: 'Woke up early',
+          room: 'bedroom',
+          status: 'completed',
+          levelAfter: state.guardianLevel ?? 1,
+          milestones: [],
+        },
       };
     }
 
@@ -522,6 +618,8 @@ function gameReducer(state, action) {
         milestoneId: 'first_study',
         routineKey: 'studied',
         baseNotification: { message: `Pranavi studied ${action.subject}! 📚`, type: 'success' },
+        telemetry: { type: 'studying', label: action.subject, room: 'study', xpGain: 15, durationSec: 25 },
+        coinsDelta: 8,
       });
     }
 
@@ -550,6 +648,8 @@ function gameReducer(state, action) {
         milestoneId: 'first_play',
         routineKey: 'played',
         baseNotification: { message: `Pranavi loved ${action.activityName}! 🎮`, type: 'success' },
+        telemetry: { type: 'playing', label: action.activityName, room: 'playroom', xpGain: 10, durationSec: 20 },
+        coinsDelta: 6,
       });
     }
 
@@ -577,6 +677,8 @@ function gameReducer(state, action) {
         milestoneId: 'first_hello',
         routineKey: 'talked',
         baseNotification: { message: 'Pranavi loved the conversation! 💬', type: 'success' },
+        telemetry: { type: 'talking', label: action.topic, room: 'living', durationSec: 15 },
+        coinsDelta: 5,
       });
     }
 
@@ -599,6 +701,8 @@ function gameReducer(state, action) {
         bondCategory: 'garden',
         milestoneId: 'first_garden_plant',
         baseNotification: { message: 'Planted a new seed! 🌱', type: 'success' },
+        telemetry: { type: 'gardening', label: `Planted ${plantInfo?.name ?? action.plantId}`, room: 'garden', durationSec: 10 },
+        coinsDelta: 4,
       });
     }
 
@@ -617,6 +721,8 @@ function gameReducer(state, action) {
       return applyPhase5Progression(updated, {
         bondCategory: 'garden',
         baseNotification: { message: 'Pranavi watered the plants! 💧', type: 'success' },
+        telemetry: { type: 'gardening', label: 'Watered Garden', room: 'garden', durationSec: 10 },
+        coinsDelta: 3,
       });
     }
 
@@ -642,6 +748,8 @@ function gameReducer(state, action) {
         bondCategory: 'garden',
         milestoneId: 'first_garden_bloom',
         baseNotification: { message: 'Pranavi collected a beautiful flower! 🌸', type: 'success' },
+        telemetry: { type: 'gardening', label: `Harvested ${plantData?.name ?? 'flower'}`, room: 'garden', xpGain: 5, durationSec: 10 },
+        coinsDelta: 8,
       });
     }
 
@@ -695,6 +803,8 @@ function gameReducer(state, action) {
           illustration: ev.icon ?? '🎉',
         },
         baseNotification: { message: `${ev.icon} ${ev.title} completed!`, type: 'success' },
+        telemetry: { type: 'event', label: ev.title, room: state.currentRoom, durationSec: 20 },
+        coinsDelta: 20,
       });
     }
 
@@ -747,8 +857,35 @@ function gameReducer(state, action) {
     case 'SET_ACTIVITY':
       return { ...state, currentActivity: action.activity };
 
-    case 'NAVIGATE':
-      return { ...state, currentRoom: action.room };
+    case 'NAVIGATE': {
+      const prevRooms = state.visitedRooms ?? ['bedroom'];
+      const isNewRoom = action.room && !prevRooms.includes(action.room);
+      const visitedRooms = isNewRoom ? [...prevRooms, action.room] : prevRooms;
+      return {
+        ...state,
+        currentRoom: action.room,
+        visitedRooms,
+        ...(isNewRoom
+          ? {
+              lastTelemetryEvent: {
+                eventId: `ev_${Date.now()}_room_${action.room}`,
+                activityType: 'walking',
+                activityLabel: `Explored ${action.room}`,
+                room: action.room,
+                status: 'completed',
+                levelAfter: state.guardianLevel ?? 1,
+                milestones: [
+                  {
+                    kind: 'room_unlocked',
+                    title: `Explored Room: ${action.room}`,
+                    detail: 'Discovered this room inside Her Little World',
+                  },
+                ],
+              },
+            }
+          : {}),
+      };
+    }
 
     case 'SET_CHARACTER_POSITION': {
       const targetRoom = action.room ?? state.currentRoom;
@@ -958,6 +1095,8 @@ function gameReducer(state, action) {
           message: canClaim ? `🌟 ${gameId} won! Reward added to inventory!` : `✨ ${gameId} completed!`,
           type: 'success',
         },
+        telemetry: { type: 'playing', label: `${gameId} mini-game`, room: 'playroom', durationSec: 25 },
+        coinsDelta: canClaim ? 15 : 4,
       });
     }
 
@@ -969,9 +1108,16 @@ function gameReducer(state, action) {
         day,
         state.clock.virtualMinutes
       );
-      const updated = { ...state, selectedOutfit: action.outfitId, activityHistory: newHistory };
+      const updated = {
+        ...state,
+        selectedOutfit: action.outfitId,
+        lastOutfitChangeAt: Date.now(),
+        activityHistory: newHistory,
+      };
       return applyPhase5Progression(updated, {
         milestoneId: action.outfitId !== 'casual' ? 'first_outfit' : null,
+        telemetry: { type: 'dressed', label: `Wore ${action.outfitId}`, room: 'wardrobe', durationSec: 5 },
+        coinsDelta: 3,
       });
     }
 
@@ -1037,11 +1183,138 @@ function getActionMessage(actionId) {
   return msgs[actionId] ?? 'Action completed!';
 }
 
-export function GameProvider({ children, uid = null }) {
+export function GameProvider({ children, uid = null, telemetryUser = null }) {
   const saved = uid ? null : loadGame();
   const [state, dispatch] = useReducer(gameReducer, saved, buildInitialState);
   const [cloudLoaded, setCloudLoaded] = useState(!uid);
+  const [isWalkingLive, setIsWalkingLive] = useState(false);
   const tickRef = useRef(null);
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const sessionIdRef = useRef(getOrCreateTabSessionId());
+  const sessionStartRef = useRef(new Date().toISOString());
+  const lastHbSentMsRef = useRef(Date.now());
+  const cachedTokenRef = useRef('');
+  const lastReportedEvRef = useRef(null);
+
+  useEffect(() => {
+    const onWalkState = (ev) => setIsWalkingLive(Boolean(ev.detail?.isWalking));
+    window.addEventListener('hlw:walking-state', onWalkState);
+    return () => window.removeEventListener('hlw:walking-state', onWalkState);
+  }, []);
+
+  // Refresh & cache Firebase ID token cleanly so pagehide/beforeunload keepalive can close session synchronously
+  useEffect(() => {
+    if (!uid || !telemetryUser?.getIdToken) return;
+    let active = true;
+    telemetryUser.getIdToken().then(t => {
+      if (active && t) cachedTokenRef.current = t;
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [uid, telemetryUser]);
+
+  // Presence heartbeat (~30s), instant state sync (debounced on room/activity transitions), & cleanup
+  useEffect(() => {
+    if (!uid || !telemetryUser || !cloudLoaded) return;
+    const sessionId = sessionIdRef.current;
+    const startedAt = sessionStartRef.current;
+    lastHbSentMsRef.current = Date.now();
+
+    const dispatchHeartbeat = (includeElapsed = true) => {
+      const nowMs = Date.now();
+      const rawDeltaSec = includeElapsed ? Math.round((nowMs - lastHbSentMsRef.current) / 1000) : 0;
+      const elapsedDeltaSec = document.visibilityState === 'hidden'
+        ? 0
+        : Math.max(0, Math.min(45, rawDeltaSec));
+      lastHbSentMsRef.current = nowMs;
+
+      const curState = stateRef.current;
+      const liveInfo = deriveLiveActivity(curState, isWalkingLive, nowMs);
+      sendTelemetryHeartbeat({
+        user: telemetryUser,
+        sessionId,
+        startedAt,
+        elapsedDeltaSec,
+        room: curState.currentRoom,
+        activity: liveInfo.activity,
+        activityLabel: liveInfo.label,
+        state: curState,
+      }).then(res => {
+        if (res?.idToken) cachedTokenRef.current = res.idToken;
+      });
+    };
+
+    dispatchHeartbeat(false);
+    const intervalId = setInterval(() => {
+      if (document.visibilityState !== 'hidden') {
+        dispatchHeartbeat(true);
+      } else {
+        lastHbSentMsRef.current = Date.now();
+      }
+    }, HEARTBEAT_INTERVAL_MS);
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        lastHbSentMsRef.current = Date.now();
+        dispatchHeartbeat(false);
+      }
+    };
+    const handleOnline = () => dispatchHeartbeat(false);
+    const handleClose = () => {
+      const finalDelta = document.visibilityState === 'hidden'
+        ? 0
+        : Math.max(0, Math.min(45, Math.round((Date.now() - lastHbSentMsRef.current) / 1000)));
+      sendTelemetrySessionEnd({
+        idToken: cachedTokenRef.current,
+        sessionId,
+        elapsedDeltaSec: finalDelta,
+      });
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('pagehide', handleClose);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('pagehide', handleClose);
+      handleClose();
+    };
+  }, [uid, telemetryUser, cloudLoaded]);
+
+  // Debounced sync when room, active visual stage, cooking, sleeping, or walking status changes
+  const liveInfoNow = deriveLiveActivity(state, isWalkingLive);
+  useEffect(() => {
+    if (!uid || !telemetryUser || !cloudLoaded) return;
+    const t = setTimeout(() => {
+      const curState = stateRef.current;
+      const info = deriveLiveActivity(curState, isWalkingLive);
+      sendTelemetryHeartbeat({
+        user: telemetryUser,
+        sessionId: sessionIdRef.current,
+        startedAt: sessionStartRef.current,
+        elapsedDeltaSec: 0,
+        room: curState.currentRoom,
+        activity: info.activity,
+        activityLabel: info.label,
+        state: curState,
+      }).then(res => {
+        if (res?.idToken) cachedTokenRef.current = res.idToken;
+      });
+    }, 1200);
+    return () => clearTimeout(t);
+  }, [uid, telemetryUser, cloudLoaded, state.currentRoom, liveInfoNow.activity, liveInfoNow.label, isWalkingLive]);
+
+  // Discrete gameplay event & milestone telemetry recorder (no movement-frame spam)
+  useEffect(() => {
+    const ev = state.lastTelemetryEvent;
+    if (!uid || !telemetryUser || !cloudLoaded || !ev || !ev.eventId) return;
+    if (lastReportedEvRef.current === ev.eventId) return;
+    lastReportedEvRef.current = ev.eventId;
+    recordActivityTelemetry({ user: telemetryUser, event: ev });
+  }, [uid, telemetryUser, cloudLoaded, state.lastTelemetryEvent]);
 
   // Load authenticated user's isolated cloud world (with legacy migration if first cloud login)
   useEffect(() => {
@@ -1120,6 +1393,7 @@ export function GameProvider({ children, uid = null }) {
     state.unlockedStickers, state.unlockedThemes, state.selectedTheme,
     state.settings, state.weather, state.miniGames,
     state.roomPositions, state.movementMode,
+    state.coins, state.visitedRooms,
   ]);
 
   // Play room transition SFX smoothly

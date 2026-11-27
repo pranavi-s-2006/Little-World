@@ -71,6 +71,8 @@ export async function saveUserWorld(uid, state) {
     unlockedOutfits:      state.unlockedOutfits,
     guardianXP:           state.guardianXP,
     guardianLevel:        state.guardianLevel,
+    coins:                state.coins ?? 0,
+    visitedRooms:         state.visitedRooms ?? ['bedroom'],
     diaryEntries:         state.diaryEntries,
     activityHistory:      state.activityHistory,
     inventory:            state.inventory,

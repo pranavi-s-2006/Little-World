@@ -82,7 +82,7 @@ function OwnerRoute({ children }) {
 function ProtectedGame() {
   const { user } = useAuth();
   return (
-    <GameProvider key={user.uid} uid={user.uid}>
+    <GameProvider key={user.uid} uid={user.uid} telemetryUser={user}>
       <Home />
     </GameProvider>
   );

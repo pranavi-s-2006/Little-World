@@ -198,8 +198,8 @@ export default function LandingPage() {
                 <>
                   <h3>🔒 Privacy Policy &amp; Consent</h3>
                   <ul className="lp-legal-list">
-                    <li>Google Authentication is used strictly for basic account identity (name, email, profile photo, UID). We never request or access Gmail inbox contents.</li>
-                    <li>Basic profile information and your individual game progress are stored securely in your account.</li>
+                    <li>Google Authentication is used strictly for basic account identity (name, email, profile photo, UID). We never request or access Gmail inbox contents, passwords, or unrelated personal data.</li>
+                    <li>Basic profile info, isolated cloud saves, and gameplay progress/activity (level, routines, completed activities, and online presence) are collected for game functionality and owner analytics.</li>
                     <li>Registration and explicit sign-in events are logged and trigger an owner notification email to <strong>prans0309@gmail.com</strong> for security and community awareness.</li>
                   </ul>
                 </>

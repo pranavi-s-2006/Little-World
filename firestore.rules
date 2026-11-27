@@ -11,7 +11,7 @@ service cloud.firestore {
         && request.auth.token.email_verified == true;
     }
 
-    // Individual user profile & game world
+    // Individual user profile & isolated game world
     match /users/{userId} {
       allow read: if isSignedIn() && (request.auth.uid == userId || isOwner());
 
@@ -22,24 +22,67 @@ service cloud.firestore {
         && (!('role' in request.resource.data) || request.resource.data.role == 'user')
         && (!('isOwner' in request.resource.data) || request.resource.data.isOwner == false);
 
-      // Users can update their own profile fields, but cannot escalate role/isOwner or change uid
+      // Users can update their own profile fields, but cannot escalate role/isOwner, change uid,
+      // or falsify server-computed telemetry totals
       allow update: if isSignedIn()
         && request.auth.uid == userId
         && request.resource.data.uid == resource.data.uid
         && request.resource.data.get('role', 'user') == resource.data.get('role', 'user')
-        && request.resource.data.get('isOwner', false) == resource.data.get('isOwner', false);
+        && request.resource.data.get('isOwner', false) == resource.data.get('isOwner', false)
+        && request.resource.data.get('totalPlaytimeSec', 0) == resource.data.get('totalPlaytimeSec', 0)
+        && request.resource.data.get('totalActivitiesCompleted', 0) == resource.data.get('totalActivitiesCompleted', 0)
+        && request.resource.data.get('totalSessions', 0) == resource.data.get('totalSessions', 0);
 
       allow delete: if false;
 
       // User's isolated virtual world save data
       match /gameState/{docId} {
-        allow read, write: if isSignedIn()
+        allow read: if isSignedIn() && request.auth.uid == userId;
+        allow write: if isSignedIn()
           && request.auth.uid == userId
           && request.resource.data.ownerUid == userId;
       }
+
+      // Per-user telemetry & progress collections (written exclusively by Render Firebase Admin SDK)
+      match /sessions/{sessionId} {
+        allow read: if isSignedIn() && (request.auth.uid == userId || isOwner());
+        allow write: if false;
+      }
+
+      match /activityEvents/{eventId} {
+        allow read: if isSignedIn() && (request.auth.uid == userId || isOwner());
+        allow write: if false;
+      }
+
+      match /progressHistory/{entryId} {
+        allow read: if isSignedIn() && (request.auth.uid == userId || isOwner());
+        allow write: if false;
+      }
     }
 
-    // Auth & notification audit logs: written only by Cloud Functions Admin SDK, readable only by verified owner
+    // Live presence: UID-isolated read for self or verified owner; written only by verified backend
+    match /playerPresence/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isOwner());
+      allow write: if false;
+    }
+
+    // Owner-only aggregated analytics & feeds (written exclusively by Firebase Admin SDK)
+    match /dailyAnalytics/{dateKey} {
+      allow read: if isOwner();
+      allow write: if false;
+    }
+
+    match /adminActivityFeed/{eventId} {
+      allow read: if isOwner();
+      allow write: if false;
+    }
+
+    match /adminSessions/{sessionId} {
+      allow read: if isOwner();
+      allow write: if false;
+    }
+
+    // Auth & notification audit logs: written only by backend Admin SDK, readable only by verified owner
     match /authEvents/{eventId} {
       allow read: if isOwner();
       allow write: if false;
