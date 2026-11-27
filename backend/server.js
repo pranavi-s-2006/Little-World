@@ -92,15 +92,24 @@ export function createApp({
     })
   );
 
-  // Public health check for Render
+  // Public root & health check routes (registered before API routes & error handlers)
   app.get('/health', (_req, res) => {
     res.status(200).json({
+      status: 'ok',
       ok: true,
-      service: 'her-little-world-backend',
+      service: 'HER LITTLE WORLD backend',
       firebaseAdminReady: fb.ready,
       resendConfigured: Boolean(resend),
       ownerEmail,
       timestamp: new Date().toISOString(),
+    });
+  });
+
+  app.get('/', (_req, res) => {
+    res.status(200).json({
+      status: 'ok',
+      service: 'HER LITTLE WORLD backend',
+      healthEndpoint: '/health',
     });
   });
 

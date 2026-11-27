@@ -54,14 +54,22 @@ async function withServer(app, fn) {
   }
 }
 
-test('GET /health returns service status cleanly', async () => {
+test('GET /health and GET / return status ok JSON cleanly', async () => {
   const app = createApp();
   await withServer(app, async (base) => {
     const res = await fetch(`${base}/health`);
     assert.equal(res.status, 200);
     const body = await res.json();
+    assert.equal(body.status, 'ok');
     assert.equal(body.ok, true);
+    assert.equal(body.service, 'HER LITTLE WORLD backend');
     assert.equal(body.ownerEmail, 'prans0309@gmail.com');
+
+    const rootRes = await fetch(`${base}/`);
+    assert.equal(rootRes.status, 200);
+    const rootBody = await rootRes.json();
+    assert.equal(rootBody.status, 'ok');
+    assert.equal(rootBody.service, 'HER LITTLE WORLD backend');
   });
 });
 
