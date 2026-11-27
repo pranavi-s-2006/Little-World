@@ -264,8 +264,20 @@ export default function BathroomRoom({ timeOfDay }) {
             exit={{ opacity: 0, y: 24, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 260, damping: 22 }}
           >
-            <div className="care-panel-title">✿ Personal Care</div>
-            <div className="care-panel-subtitle">Choose an activity for Pranavi~</div>
+            <div className="care-panel-header">
+              <div>
+                <div className="care-panel-title">✿ Personal Care</div>
+                <div className="care-panel-subtitle">Choose an activity for Pranavi~</div>
+              </div>
+              <button
+                type="button"
+                className="care-panel-close"
+                onClick={() => setShowPanel(false)}
+                aria-label="Close personal care menu"
+              >
+                ✕
+              </button>
+            </div>
             <div className="care-grid">
               {CARE_ACTIVITIES.map((act, i) => (
                 <motion.button

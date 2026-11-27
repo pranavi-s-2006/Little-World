@@ -645,6 +645,29 @@
   font-style: italic;
 }
 
+.food-panel-close {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--peach-200);
+  background: #ffffff;
+  color: var(--peach-400);
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s, background 0.15s;
+}
+
+.food-panel-close:hover {
+  background: var(--peach-100);
+  transform: scale(1.06);
+}
+
 /* Category tabs */
 .food-cats {
   display: flex;
@@ -853,8 +876,75 @@
 }
 
 /* ── RESPONSIVE ───────────────────────────────────────── */
-@media (max-width: 700px) {
-  .food-panel { width: calc(100% - 12px); left: 6px; top: 2%; max-height: 85%; }
-  .food-grid  { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-  .fridge-open-btn { font-size: 0.72rem; padding: 7px 12px; }
+@media (max-width: 767px) {
+  .kitchen-water-dispenser {
+    left: clamp(146px, 45%, 215px);
+  }
+  .food-panel {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: auto;
+    bottom: 8px;
+    width: auto;
+    max-width: 460px;
+    margin: 0 auto;
+    max-height: calc(100% - 56px);
+    z-index: 60;
+  }
+  .food-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+    min-height: 0;
+  }
+  .food-card {
+    min-height: 44px;
+    padding: 9px 6px;
+  }
+  .cooking-panel {
+    min-width: 0;
+    width: min(calc(100vw - 24px), 340px);
+    max-width: calc(100vw - 24px);
+    padding: 16px;
+  }
+  .hunger-hint {
+    white-space: normal;
+    max-width: calc(100vw - 24px);
+    text-align: center;
+    top: 50px;
+  }
+  .fridge-open-btn {
+    font-size: 0.74rem;
+    padding: 8px 14px;
+    min-height: 42px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kitchen-stove {
+    left: 3%;
+    transform: scale(0.82);
+    transform-origin: bottom left;
+  }
+  .kitchen-microwave {
+    left: 92px;
+    width: 64px;
+    height: 46px;
+  }
+  .kitchen-water-dispenser {
+    left: 164px;
+    transform: scale(0.84);
+    transform-origin: bottom left;
+  }
+  .table-legs {
+    gap: 60px;
+  }
+}
+
+@media (max-width: 359px) {
+  .food-grid {
+    grid-template-columns: 1fr;
+  }
 }

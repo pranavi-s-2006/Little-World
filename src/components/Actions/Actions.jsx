@@ -37,9 +37,23 @@ export default function Actions() {
     setTimeout(() => setActiveAction(null), 1200);
   }
 
+  function closeMobileSheet() {
+    document.querySelector('.mobile-drawer-backdrop')?.click();
+  }
+
   return (
     <div className="actions-panel">
-      <div className="actions-title">✿ Care for Pranavi</div>
+      <div className="actions-title-row">
+        <div className="actions-title">✿ Care for Pranavi</div>
+        <button
+          type="button"
+          className="mobile-sheet-close"
+          onClick={closeMobileSheet}
+          aria-label="Close care actions panel"
+        >
+          ✕
+        </button>
+      </div>
       <div className="actions-grid">
         {ACTIONS.map((action, i) => {
           const isActive = activeAction === action.id;

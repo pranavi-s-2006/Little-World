@@ -1,6 +1,6 @@
 @import './variables.css';
 @import './animations.css';
-@import './responsive.css';
+/* responsive.css is imported last in main.jsx so responsive rules override component styles cleanly */
 
 *, *::before, *::after {
   box-sizing: border-box;

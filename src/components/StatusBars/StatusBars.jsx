@@ -17,9 +17,23 @@ function getBarColor(displayPct) {
 }
 
 export default function StatusBars({ needs }) {
+  function closeMobileSheet() {
+    document.querySelector('.mobile-drawer-backdrop')?.click();
+  }
+
   return (
     <div className="status-bars">
-      <div className="status-title">✿ Pranavi's Wellbeing</div>
+      <div className="status-title-row">
+        <div className="status-title">✿ Pranavi's Wellbeing</div>
+        <button
+          type="button"
+          className="mobile-sheet-close"
+          onClick={closeMobileSheet}
+          aria-label="Close needs panel"
+        >
+          ✕
+        </button>
+      </div>
       {STATS.map(stat => {
         const raw = needs[stat.key] ?? 0;
         const displayPct = stat.invert ? 100 - raw : raw;

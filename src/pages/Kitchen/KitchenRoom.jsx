@@ -98,7 +98,7 @@ function CookingOverlay({ foodId, progress, onCancel }) {
   );
 }
 
-function FridgeContents({ inventory, activeCategory, onSelectCategory, onSelectFood }) {
+function FridgeContents({ inventory, activeCategory, onSelectCategory, onSelectFood, onClose }) {
   const categoryFoods = getFoodByCategory(activeCategory);
 
   return (
@@ -113,6 +113,14 @@ function FridgeContents({ inventory, activeCategory, onSelectCategory, onSelectF
         <div className="food-panel-title-row">
           <span className="food-panel-icon">❄️</span>
           <span className="food-panel-title">What shall we have?</span>
+          <button
+            type="button"
+            className="food-panel-close"
+            onClick={onClose}
+            aria-label="Close fridge menu"
+          >
+            ✕
+          </button>
         </div>
       </div>
 
@@ -453,6 +461,7 @@ export default function KitchenRoom({ timeOfDay }) {
             activeCategory={activeCategory}
             onSelectCategory={setActiveCategory}
             onSelectFood={handleSelectFood}
+            onClose={() => setFridgeOpen(false)}
           />
         )}
       </AnimatePresence>

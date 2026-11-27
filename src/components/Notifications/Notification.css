@@ -13,7 +13,9 @@
   box-shadow: var(--shadow-float);
   z-index: var(--z-toast);
   pointer-events: none;
-  white-space: nowrap;
+  max-width: calc(100vw - 24px);
+  white-space: normal;
+  text-align: center;
 }
 
 .notification--success {
