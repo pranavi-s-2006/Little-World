@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner() {
+      return isSignedIn()
+        && request.auth.token.email == 'prans0309@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    // Individual user profile & game world
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isOwner());
+
+      // Users can create their own profile, but CANNOT grant themselves owner/admin role
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.uid == userId
+        && (!('role' in request.resource.data) || request.resource.data.role == 'user')
+        && (!('isOwner' in request.resource.data) || request.resource.data.isOwner == false);
+
+      // Users can update their own profile fields, but cannot escalate role/isOwner or change uid
+      allow update: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.get('role', 'user') == resource.data.get('role', 'user')
+        && request.resource.data.get('isOwner', false) == resource.data.get('isOwner', false);
+
+      allow delete: if false;
+
+      // User's isolated virtual world save data
+      match /gameState/{docId} {
+        allow read, write: if isSignedIn()
+          && request.auth.uid == userId
+          && request.resource.data.ownerUid == userId;
+      }
+    }
+
+    // Auth & notification audit logs: written only by Cloud Functions Admin SDK, readable only by verified owner
+    match /authEvents/{eventId} {
+      allow read: if isOwner();
+      allow write: if false;
+    }
+
+    match /notificationLogs/{logId} {
+      allow read: if isOwner();
+      allow write: if false;
+    }
+
+    match /rateLimits/{uid} {
+      allow read, write: if false;
+    }
+  }
+}

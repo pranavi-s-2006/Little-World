@@ -1,0 +1,70 @@
+:root {
+  /* Pastel Palette */
+  --pink-100: #fff0f5;
+  --pink-200: #ffd6e7;
+  --pink-300: #ffb3cc;
+  --pink-400: #ff85aa;
+  --pink-500: #e8638a;
+
+  --lavender-100: #f5f0ff;
+  --lavender-200: #e8d5ff;
+  --lavender-300: #c9a8ff;
+  --lavender-400: #a87de8;
+  --lavender-500: #7c4dbd;
+
+  --cream-100: #fffdf7;
+  --cream-200: #fff8e7;
+  --cream-300: #ffefc8;
+
+  --peach-100: #fff4ee;
+  --peach-200: #ffd8c0;
+  --peach-300: #ffb899;
+  --peach-400: #f4845f;
+
+  --sage-100: #f0f7f0;
+  --sage-200: #c8e6c8;
+  --sage-300: #9ecf9e;
+  --sage-400: #6aaa6a;
+
+  --blue-100: #f0f8ff;
+  --blue-200: #c8e6ff;
+  --blue-300: #90c8f0;
+  --blue-400: #5aaad4;
+
+  --night-100: #1a1a3e;
+  --night-200: #2d2b55;
+  --night-300: #3d3a6e;
+  --night-400: #6b68a8;
+
+  /* Typography */
+  --font-display: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-accent: cursive;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 20px rgba(232, 99, 138, 0.12);
+  --shadow-card: 0 8px 32px rgba(168, 125, 232, 0.15);
+  --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.1);
+
+  /* Border Radius */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-xl: 48px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-med: 0.4s ease;
+  --transition-slow: 0.8s ease;
+
+  /* Z-index layers */
+  --z-bg: 0;
+  --z-room: 10;
+  --z-furniture: 20;
+  --z-character: 30;
+  --z-ui: 40;
+  --z-overlay: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+}

@@ -1,0 +1,84 @@
+.activity-ctrl-bar {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(255, 250, 253, 0.96);
+  backdrop-filter: blur(10px);
+  border: 2px solid #f4c8e8;
+  border-radius: 18px;
+  box-shadow: 0 8px 26px rgba(124, 77, 188, 0.18);
+  z-index: calc(var(--z-ui) + 12);
+  min-width: 260px;
+  max-width: 390px;
+}
+
+.acb-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.acb-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.acb-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #7c4dbc;
+}
+
+.acb-stage {
+  font-size: 0.7rem;
+  color: #8f74a8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.acb-track {
+  height: 6px;
+  background: #f0e4ff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.acb-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c084fc, #e879a0);
+  border-radius: 4px;
+  transition: width 0.12s linear;
+}
+
+.acb-btns {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.acb-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #dfc8f8;
+  background: #f8f0ff;
+  color: #6b4694;
+  font-size: 0.78rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acb-btn--cancel {
+  border-color: #ffc2d4;
+  background: #fff0f4;
+  color: #c94068;
+}

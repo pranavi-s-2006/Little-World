@@ -1,0 +1,81 @@
+.weather-panel-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.weather-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f3f9ff, #fff3f8);
+  border: 1.5px solid var(--pink-200, #ffd1e3);
+  color: #6a527a;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.wc-sep {
+  opacity: 0.5;
+}
+
+.weather-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 270px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1.5px solid var(--pink-200, #ffd1e3);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 30px rgba(124, 77, 188, 0.16);
+  z-index: 600;
+}
+
+.wp-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.wp-big-icon {
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.wp-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #6a4494;
+}
+
+.wp-desc {
+  font-size: 0.72rem;
+  color: #8c739f;
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.wp-divider {
+  height: 1px;
+  background: #f3e4fa;
+  margin: 10px 0;
+}
+
+@media (max-width: 820px) {
+  .wc-label, .wc-sep { display: none; }
+}
+@media (max-width: 480px) {
+  .weather-chip { padding: 4px 8px; font-size: 0.68rem; }
+  .weather-popover {
+    position: fixed;
+    top: 56px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: calc(100vw - 24px);
+  }
+}

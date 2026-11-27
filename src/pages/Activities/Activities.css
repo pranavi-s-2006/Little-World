@@ -1,0 +1,107 @@
+.activities-room {
+  background: linear-gradient(180deg, #fff0f5 0%, #ffd6e7 100%);
+}
+
+.activities-wall {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #fff0f5, #ffd6e7);
+  background-image: radial-gradient(circle at 25px 25px, rgba(232,99,138,0.07) 2px, transparent 2px);
+  background-size: 50px 50px;
+}
+
+.activities-title-area {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.activities-heading {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--pink-500);
+  font-style: italic;
+}
+
+.activities-sub {
+  font-size: 0.8rem;
+  color: var(--pink-400);
+  margin-top: 4px;
+}
+
+.activities-grid {
+  position: absolute;
+  top: 18%;
+  left: 5%;
+  right: 5%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  z-index: 10;
+  max-height: 72%;
+  overflow-y: auto;
+}
+
+.activity-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 14px;
+  background: rgba(255,255,255,0.88);
+  border: 2px solid var(--pink-200);
+  border-radius: var(--radius-lg);
+  width: 130px;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-fast);
+}
+
+.activity-card:hover {
+  background: var(--pink-100);
+  border-color: var(--pink-300);
+}
+
+.act-emoji { font-size: 2rem; }
+
+.act-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #5a4070;
+  text-align: center;
+}
+
+.act-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+}
+
+.act-tag {
+  font-size: 0.55rem;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.act-tag.happy  { background: var(--pink-100);     color: var(--pink-500); }
+.act-tag.energy { background: #fff9c4;              color: #b8860b; }
+.act-tag.social { background: var(--lavender-100);  color: var(--lavender-500); }
+
+.act-duration {
+  font-size: 0.58rem;
+  color: #9a8aaa;
+}
+
+.activities-floor {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 12%;
+  background: linear-gradient(180deg, #ffd6e7, #ffb3cc);
+  border-top: 3px solid rgba(0,0,0,0.06);
+}

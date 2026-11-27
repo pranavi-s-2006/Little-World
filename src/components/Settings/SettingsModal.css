@@ -1,0 +1,133 @@
+.settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(60, 35, 95, 0.42);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal, 1000);
+  padding: 16px;
+}
+
+.settings-modal {
+  background: #fff9fc;
+  border: 2px solid #f4c8e8;
+  border-radius: 22px;
+  width: 100%;
+  max-width: 460px;
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 18px 50px rgba(90, 45, 130, 0.25);
+  overflow: hidden;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #fff0f7, #f3e8ff);
+  border-bottom: 1.5px solid #f4d4ec;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #7c4dbc;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+}
+
+.settings-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #7c4dbc;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.settings-body {
+  padding: 14px 18px 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings-group {
+  background: #fff;
+  border: 1.5px solid #f0e0ff;
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-group h3 {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #e8638a;
+  font-weight: 800;
+}
+
+.settings-row,
+.settings-slider-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: #5b4375;
+  font-weight: 600;
+}
+
+.settings-slider-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.settings-row select,
+.settings-row input[type="number"] {
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 1.5px solid #dfc8f8;
+  background: #fdf9ff;
+  color: #5b4375;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.settings-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #c084fc;
+}
+
+.settings-slider-row input[type="range"] {
+  accent-color: #e879a0;
+}
+
+.settings-action-btn {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #d9c0f8;
+  background: #f8f0ff;
+  color: #6b4694;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.settings-action-btn.is-danger {
+  border-color: #ffc2d4;
+  background: #fff0f4;
+  color: #c94068;
+}

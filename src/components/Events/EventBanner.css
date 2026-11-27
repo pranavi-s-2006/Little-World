@@ -1,0 +1,129 @@
+/* EventBanner.css — Floating event notification banner */
+
+.event-banner {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: linear-gradient(135deg, #fff0f7, #f3e8ff);
+  border: 2.5px solid #f4c8e8;
+  border-radius: 20px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 8px 32px rgba(168,125,232,0.25), 0 2px 8px rgba(0,0,0,0.08);
+  z-index: var(--z-ui, 400);
+  min-width: 280px;
+  max-width: 480px;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.event-banner__shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: banner-shimmer 2.5s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+@keyframes banner-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.event-banner__icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(168,125,232,0.3));
+  position: relative;
+  z-index: 1;
+}
+
+.event-banner__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.event-banner__label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #e8638a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.event-banner__title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #7c4dbc;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-banner__desc {
+  font-size: 0.75rem;
+  color: #9e7ab5;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.event-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.event-banner__join-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #c084fc, #e879a0);
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(192,132,252,0.35);
+}
+
+.event-banner__dismiss-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(168,125,232,0.12);
+  border: none;
+  color: #a87de8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.event-banner__dismiss-btn:hover {
+  background: rgba(168,125,232,0.22);
+}

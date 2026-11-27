@@ -1,0 +1,657 @@
+/* ═══════════════════════════════════════════════════════
+   BATHROOM ROOM — HER LITTLE WORLD
+═══════════════════════════════════════════════════════ */
+
+.bathroom-room {
+  background: linear-gradient(180deg, #e0f4ff 0%, #c8e8f8 100%);
+}
+
+/* ── WALL ─────────────────────────────────────────────── */
+.bathroom-wall {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 58%;
+  transition: background 0.8s ease;
+}
+
+.bathroom-tiles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(144,200,240,0.18) 0px, rgba(144,200,240,0.18) 1px, transparent 1px, transparent 36px),
+    repeating-linear-gradient(0deg,  rgba(144,200,240,0.18) 0px, rgba(144,200,240,0.18) 1px, transparent 1px, transparent 36px);
+}
+
+/* ── MIRROR ───────────────────────────────────────────── */
+.bathroom-mirror {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mirror-frame {
+  width: 90px;
+  height: 110px;
+  position: relative;
+}
+
+.mirror-glass {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ddeeff 60%, #b8d8f0 100%);
+  border: 5px solid #90c8f0;
+  border-radius: 50% 50% 42% 42%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px rgba(90,170,212,0.3),
+    inset 0 2px 10px rgba(255,255,255,0.6);
+}
+
+.mirror-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.5) 50%, transparent 60%);
+  pointer-events: none;
+}
+
+.mirror-reflection { font-size: 2rem; }
+
+.mirror-sparkle-top {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  font-size: 1.3rem;
+}
+
+.mirror-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #5aaad4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── BATHTUB ──────────────────────────────────────────── */
+.bathtub {
+  position: absolute;
+  bottom: 36%;
+  left: 4%;
+  z-index: 6;
+}
+
+.tub-faucet-assembly {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding-left: 10px;
+}
+
+.tub-faucet {
+  width: 20px;
+  height: 28px;
+  background: linear-gradient(180deg, #ccc, #aaa);
+  border-radius: 4px 4px 0 0;
+  border: 1.5px solid #999;
+}
+
+.tub-handles {
+  display: flex;
+  gap: 6px;
+}
+
+.tub-handle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #999;
+}
+
+.tub-handle.hot  { background: #ff6b6b; }
+.tub-handle.cold { background: #6bb5ff; }
+
+.tub-body {
+  width: 180px;
+  height: 76px;
+  background: linear-gradient(180deg, #fff, #edf7ff);
+  border: 3px solid #90c8f0;
+  border-radius: 0 0 60px 60px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 4px 12px rgba(144,200,240,0.2);
+}
+
+.tub-water {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 52%;
+  background: linear-gradient(180deg, rgba(144,200,240,0.4), rgba(90,170,212,0.6));
+  border-radius: 0 0 60px 60px;
+  transition: background 0.3s;
+}
+
+.tub-bubbles {
+  position: absolute;
+  bottom: 50%;
+  left: 0; right: 0;
+  height: 20px;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  background: rgba(255,255,255,0.75);
+  border-radius: 50%;
+  border: 1px solid rgba(144,200,240,0.4);
+}
+
+.bath-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+  color: #5aaad4;
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tub-rim {
+  height: 8px;
+  background: linear-gradient(180deg, #fff, #e8f4ff);
+  border: 2px solid #90c8f0;
+  border-radius: 2px;
+}
+
+.tub-feet {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.tub-foot {
+  width: 10px;
+  height: 16px;
+  background: linear-gradient(180deg, #aaa, #888);
+  border-radius: 0 0 5px 5px;
+}
+
+/* ── SHOWER HEAD ──────────────────────────────────────── */
+.shower-head {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shower-pipe {
+  width: 4px;
+  height: 40px;
+  background: linear-gradient(180deg, #bbb, #999);
+  border-radius: 2px;
+}
+
+.shower-head-cap { font-size: 1.4rem; margin-top: -4px; }
+
+/* ── SINK AREA ────────────────────────────────────────── */
+.sink-area {
+  position: absolute;
+  bottom: 36%;
+  right: 6%;
+  z-index: 6;
+}
+
+.sink-cabinet { display: flex; flex-direction: column; }
+
+.sink-counter-top {
+  position: relative;
+  width: 90px;
+}
+
+.sink-basin {
+  width: 90px;
+  height: 44px;
+  background: linear-gradient(180deg, #fff, #edf7ff);
+  border: 2.5px solid #90c8f0;
+  border-radius: 0 0 36px 36px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  box-shadow: inset 0 3px 8px rgba(144,200,240,0.2);
+}
+
+.sink-drain {
+  width: 16px;
+  height: 6px;
+  background: #aaa;
+  border-radius: 3px;
+}
+
+.sink-faucet {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.faucet-neck {
+  width: 6px;
+  height: 20px;
+  background: linear-gradient(180deg, #ccc, #aaa);
+  border-radius: 3px;
+}
+
+.faucet-head {
+  width: 20px;
+  height: 8px;
+  background: linear-gradient(180deg, #ccc, #aaa);
+  border-radius: 10px;
+}
+
+.sink-cabinet-body {
+  width: 90px;
+  height: 44px;
+  background: linear-gradient(180deg, #f0dab8, #e8c49a);
+  border: 2px solid #c49060;
+  border-radius: 0 0 6px 6px;
+  display: flex;
+}
+
+.sink-door {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid #c49060;
+}
+
+.sink-door:last-child { border-right: none; }
+
+.sink-door-handle {
+  width: 6px;
+  height: 6px;
+  background: #a07040;
+  border-radius: 50%;
+}
+
+/* ── SHELF ────────────────────────────────────────────── */
+.bathroom-shelf {
+  position: absolute;
+  top: 20%;
+  right: 4%;
+  z-index: 5;
+  position: absolute;
+}
+
+.shelf-board {
+  display: flex;
+  gap: 6px;
+  background: linear-gradient(180deg, #f0dab8, #e8c49a);
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 2px solid #c49060;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.shelf-product { font-size: 1.3rem; cursor: default; }
+
+.shelf-bracket {
+  position: absolute;
+  bottom: -8px;
+  width: 10px;
+  height: 10px;
+  background: #c49060;
+  border-radius: 0 0 3px 3px;
+}
+
+.left-bracket  { left: 10px; }
+.right-bracket { right: 10px; }
+
+/* ── TOOTHBRUSH HOLDER ────────────────────────────────── */
+.toothbrush-holder {
+  position: absolute;
+  top: 20%;
+  left: 36%;
+  z-index: 5;
+}
+
+.holder-cup {
+  width: 36px;
+  height: 44px;
+  background: linear-gradient(180deg, #ffd6e7, #ffb3cc);
+  border: 2px solid #ff85aa;
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(232,99,138,0.2);
+}
+
+/* ── TOWEL RACK ───────────────────────────────────────── */
+.towel-rack {
+  position: absolute;
+  top: 18%;
+  left: 4%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.towel-bar {
+  width: 72px;
+  height: 7px;
+  background: linear-gradient(180deg, #ccc, #aaa);
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.towel {
+  width: 60px;
+  height: 36px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pink-towel     { background: linear-gradient(135deg, #ffb3cc, #ff85aa); }
+.lavender-towel { background: linear-gradient(135deg, #c9a8ff, #a87de8); }
+
+.towel-stripe {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 4px;
+  background: rgba(255,255,255,0.4);
+}
+
+/* ── BATH MAT ─────────────────────────────────────────── */
+.bath-mat {
+  position: absolute;
+  bottom: 37%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 28px;
+  background: linear-gradient(135deg, #ffd6e7, #ffb3cc);
+  border-radius: 50%;
+  opacity: 0.7;
+  z-index: 4;
+  overflow: hidden;
+}
+
+.bath-mat-pattern {
+  display: flex;
+  height: 100%;
+  gap: 6px;
+  padding: 4px;
+}
+
+.mat-stripe {
+  flex: 1;
+  background: rgba(255,255,255,0.3);
+  border-radius: 2px;
+}
+
+/* ── DECOR ────────────────────────────────────────────── */
+.bathroom-decor-items {
+  position: absolute;
+  top: 6%;
+  left: 25%;
+  display: flex;
+  gap: 10px;
+  font-size: 1.5rem;
+  z-index: 5;
+}
+
+.bd-item { display: inline-block; }
+
+/* ── HYGIENE HINT ─────────────────────────────────────── */
+.hygiene-hint {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.96);
+  border: 1.5px solid var(--blue-200);
+  border-radius: var(--radius-full);
+  padding: 6px 18px;
+  font-size: 0.72rem;
+  color: var(--blue-400);
+  font-weight: 600;
+  z-index: 15;
+  white-space: nowrap;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ── CARE BUTTON ──────────────────────────────────────── */
+.care-open-btn {
+  position: absolute;
+  bottom: 38%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--blue-300), var(--blue-400));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 10px 26px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 11;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.care-open-btn:hover   { filter: brightness(1.08); }
+.care-open-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── CARE PANEL ───────────────────────────────────────── */
+.care-panel {
+  position: absolute;
+  bottom: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.98);
+  border: 2px solid var(--blue-200);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  z-index: 15;
+  box-shadow: var(--shadow-card);
+  min-width: 320px;
+}
+
+.care-panel-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--blue-400);
+  font-style: italic;
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.care-panel-subtitle {
+  font-size: 0.68rem;
+  color: #9a8aaa;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.care-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.care-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 5px;
+  background: color-mix(in srgb, var(--care-color) 15%, white);
+  border: 2px solid var(--care-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.care-icon   { font-size: 1.7rem; }
+.care-label  { font-size: 0.62rem; font-weight: 700; color: #6a5080; text-align: center; }
+.care-desc   { font-size: 0.54rem; color: #9a8090; text-align: center; line-height: 1.3; }
+
+.care-meta {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.care-time    { font-size: 0.5rem; color: var(--blue-400); font-weight: 600; }
+.care-hygiene { font-size: 0.5rem; color: var(--sage-400); font-weight: 600; }
+
+/* ── DONE TOAST ───────────────────────────────────────── */
+.care-done-toast {
+  position: absolute;
+  bottom: 42%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255,255,255,0.97);
+  border: 2px solid var(--blue-200);
+  border-radius: var(--radius-lg);
+  padding: 12px 20px;
+  z-index: 20;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.cdt-icon { font-size: 1.6rem; }
+.cdt-msg  { font-family: var(--font-display); font-size: 0.85rem; color: var(--blue-400); font-style: italic; }
+
+/* ── ANIMATION OVERLAY ────────────────────────────────── */
+.care-anim-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(220,240,255,0.88);
+  backdrop-filter: blur(8px);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-anim-content {
+  text-align: center;
+  position: relative;
+  padding: 24px 32px;
+  background: rgba(255,255,255,0.7);
+  border: 2px solid rgba(144,200,240,0.4);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  min-width: 200px;
+}
+
+.privacy-curtain {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(144,200,240,0.3), rgba(255,182,204,0.2));
+  border-radius: var(--radius-xl);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.care-anim-icon {
+  font-size: 4.5rem;
+  display: block;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.care-anim-label {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--blue-400);
+  font-style: italic;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.care-anim-bar-wrap {
+  width: 100%;
+  height: 8px;
+  background: rgba(144,200,240,0.3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.care-anim-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-300), var(--blue-400));
+  border-radius: var(--radius-full);
+}
+
+.care-sparkle-field {
+  position: relative;
+  height: 50px;
+  pointer-events: none;
+}
+
+.care-sparkle {
+  position: absolute;
+  bottom: 0;
+  font-size: 1.2rem;
+}
+
+/* ── FLOOR ────────────────────────────────────────────── */
+.bathroom-floor {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 36%;
+  background: linear-gradient(180deg, #c8e8f8, #aed8f0);
+  border-top: 3px solid rgba(90,170,212,0.2);
+}
+
+.bathroom-floor-tiles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(90,170,212,0.14) 0px, rgba(90,170,212,0.14) 1px, transparent 1px, transparent 42px),
+    repeating-linear-gradient(0deg,  rgba(90,170,212,0.14) 0px, rgba(90,170,212,0.14) 1px, transparent 1px, transparent 42px);
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media (max-width: 700px) {
+  .care-panel    { min-width: calc(100vw - 24px); }
+  .care-grid     { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .bathtub       { left: 2%; }
+}

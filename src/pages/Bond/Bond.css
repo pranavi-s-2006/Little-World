@@ -1,0 +1,336 @@
+/* Bond.css — Guardian Bond & Relationship page styling */
+
+.bond-room {
+  position: relative;
+  min-height: 100%;
+  background: linear-gradient(160deg, #fff0f7 0%, #f3e8ff 50%, #e8f4fd 100%);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+}
+
+.bond-room__inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  padding-bottom: 2rem;
+}
+
+/* ── Floating petals ── */
+.bond-petals {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 120px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bond-petal {
+  position: absolute;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  user-select: none;
+}
+
+/* ── Hero ── */
+.bond-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  background: white;
+  border-radius: var(--radius-xl, 20px);
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--shadow-card, 0 4px 20px rgba(168,125,232,0.12));
+  border: 2px solid #f4c8e8;
+  flex-wrap: wrap;
+}
+.bond-hero__badge {
+  font-size: 3.2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(168,125,232,0.3));
+}
+.bond-hero__info {
+  flex: 1;
+  min-width: 160px;
+}
+.bond-hero__level {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--pink-500, #e8638a);
+  margin: 0 0 0.1rem;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+}
+.bond-hero__title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #7c4dbc;
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+}
+.bond-hero__desc {
+  font-size: 0.84rem;
+  color: #9e7ab5;
+  margin: 0;
+  line-height: 1.5;
+}
+.bond-hero__points {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(135deg, #f9d8ef, #e8d5ff);
+  border-radius: var(--radius-md, 12px);
+  padding: 0.7rem 1.1rem;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+.bond-pts-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #7c4dbc;
+  line-height: 1.1;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+}
+.bond-pts-label {
+  font-size: 0.72rem;
+  color: #a87de8;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  margin-top: 0.1rem;
+}
+
+/* ── Progress to next level ── */
+.bond-progress-section {
+  background: white;
+  border-radius: var(--radius-lg, 16px);
+  padding: 1rem 1.4rem;
+  box-shadow: var(--shadow-soft, 0 2px 12px rgba(168,125,232,0.08));
+  border: 1.5px dashed #d9b3f7;
+}
+.bond-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #7a5c99;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+.bond-progress-pct {
+  font-weight: 700;
+  color: #a87de8;
+}
+.bond-progress-track {
+  height: 14px;
+  border-radius: 8px;
+  background: #f0e4ff;
+  overflow: hidden;
+  position: relative;
+}
+.bond-progress-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #c084fc, #e879a0);
+  transform-origin: left;
+}
+.bond-progress-need {
+  font-size: 0.78rem;
+  color: #b08abf;
+  margin: 0.45rem 0 0;
+  text-align: right;
+}
+
+/* ── Section title ── */
+.bond-section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #7c4dbc;
+  margin: 0 0 0.9rem;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ── Attributes ── */
+.bond-attrs-section {
+  background: white;
+  border-radius: var(--radius-xl, 20px);
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--shadow-card, 0 4px 20px rgba(168,125,232,0.1));
+  border: 1.5px solid #f0d8ff;
+}
+.bond-attrs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.bond-attr {
+  width: 100%;
+}
+.bond-attr__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+.bond-attr__icon {
+  font-size: 1rem;
+}
+.bond-attr__label {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6b4e8a;
+}
+.bond-attr__value {
+  font-size: 0.8rem;
+  color: #9e7ab5;
+  font-weight: 700;
+}
+.bond-attr__track {
+  height: 10px;
+  background: #f5eeff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.bond-attr__fill {
+  height: 100%;
+  border-radius: 6px;
+  transform-origin: left;
+  opacity: 0.85;
+}
+
+/* ── Level ladder ── */
+.bond-levels-section {
+  background: white;
+  border-radius: var(--radius-xl, 20px);
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--shadow-card, 0 4px 20px rgba(168,125,232,0.1));
+  border: 1.5px solid #ffe0f0;
+}
+.bond-levels-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.bond-lvl-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  background: #fdf5ff;
+  border: 1.5px solid #ecdcff;
+  cursor: default;
+  transition: background 0.2s;
+}
+.bond-lvl-badge--current {
+  background: linear-gradient(135deg, #f9d8ef, #e8d5ff);
+  border-color: #c084fc;
+  box-shadow: 0 2px 10px rgba(192,132,252,0.22);
+}
+.bond-lvl-badge__icon {
+  font-size: 1.5rem;
+}
+.bond-lvl-badge__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.bond-lvl-badge__title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #6b4e8a;
+}
+.bond-lvl-badge__min {
+  font-size: 0.74rem;
+  color: #b08abf;
+  margin-top: 0.1rem;
+}
+.bond-lvl-badge__you {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #e8638a;
+  background: white;
+  border-radius: 20px;
+  padding: 0.15rem 0.5rem;
+  border: 1.5px solid #f4c8e8;
+}
+
+/* ── Bond tips ── */
+.bond-tips-section {
+  background: white;
+  border-radius: var(--radius-xl, 20px);
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--shadow-card, 0 4px 20px rgba(168,125,232,0.1));
+  border: 1.5px solid #d9f0ff;
+}
+.bond-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+.bond-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  background: #fafcff;
+  border-radius: 12px;
+  border: 1.5px solid #e0eeff;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: default;
+}
+.bond-tip__icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.bond-tip__label {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #5a7bbf;
+  margin-bottom: 0.15rem;
+}
+.bond-tip__desc {
+  font-size: 0.75rem;
+  color: #8ba8cc;
+  line-height: 1.4;
+}
+
+/* ── Reward history ── */
+.bond-rewards-section {
+  background: white;
+  border-radius: var(--radius-xl, 20px);
+  padding: 1.2rem 1.4rem;
+  box-shadow: var(--shadow-card, 0 4px 20px rgba(168,125,232,0.1));
+  border: 1.5px solid #fff0d8;
+}
+.bond-rewards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.bond-reward-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: #fffdf5;
+  border-radius: 12px;
+  border: 1.5px solid #ffe8b0;
+}
+.bond-reward-badge {
+  font-size: 1.5rem;
+}
+.bond-reward-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #7a5c3a;
+}
+.bond-reward-date {
+  font-size: 0.74rem;
+  color: #c09060;
+  margin-top: 0.1rem;
+}

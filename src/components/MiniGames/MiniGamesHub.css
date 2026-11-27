@@ -1,0 +1,352 @@
+.mg-hub {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.mg-hub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mg-hub-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #7c4dbc;
+  font-family: var(--font-display, 'Nunito', sans-serif);
+}
+
+.mg-close-x {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #f5e8ff;
+  color: #7c4dbc;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mg-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mg-tab {
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1.5px solid #ead8ff;
+  background: #fff;
+  color: #7a5c99;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.mg-tab.is-active {
+  background: linear-gradient(135deg, #c084fc, #e879a0);
+  color: #fff;
+  border-color: transparent;
+}
+
+.mg-card-panel {
+  background: #fff9fc;
+  border: 1.5px solid #f4d8ea;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.mg-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.mg-title {
+  margin: 0;
+  font-size: 1rem;
+  color: #6b4694;
+}
+
+.mg-inst {
+  margin: 2px 0 0;
+  font-size: 0.76rem;
+  color: #8f74a8;
+}
+
+.mg-stats {
+  display: flex;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #7c4dbc;
+  flex-shrink: 0;
+}
+
+.mg-memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.mg-mem-card {
+  height: 58px;
+  border-radius: 12px;
+  border: 2px solid #ecd8ff;
+  background: linear-gradient(135deg, #ffe4f1, #f0e4ff);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.mg-mem-card.is-open {
+  background: #fff;
+  border-color: #c084fc;
+}
+
+.mg-mem-card.is-matched {
+  background: #f0fff4;
+  border-color: #98e6b8;
+}
+
+.mg-victory {
+  text-align: center;
+  padding: 16px 8px;
+}
+
+.mg-vic-icon {
+  font-size: 2.3rem;
+}
+
+.mg-reward-note {
+  font-size: 0.78rem;
+  color: #5b9a48;
+  font-weight: 700;
+}
+
+.mg-primary-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #c084fc, #e879a0);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.84rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.mg-seed-bar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.mg-seed-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  border: 1.5px solid #e2d4f8;
+  background: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #6b4e8a;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.mg-seed-btn.is-active {
+  background: #f2e4ff;
+  border-color: #a87de8;
+}
+
+.mg-seed-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.mg-qty {
+  color: #a87de8;
+}
+
+.mg-garden-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.mg-plot-card {
+  background: #fff;
+  border: 1.5px solid #d9efd9;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mg-plot-plant {
+  border: 1.5px dashed #a8d8a8;
+  background: #f4fff4;
+  border-radius: 10px;
+  padding: 14px 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4f8a4f;
+  font-family: inherit;
+}
+
+.mg-plot-emoji {
+  font-size: 1.6rem;
+}
+
+.mg-plot-name {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #5a4475;
+}
+
+.mg-plot-stage {
+  font-size: 0.68rem;
+  color: #9e7ab5;
+  text-transform: capitalize;
+}
+
+.mg-mini-btn {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1.5px solid #b8dcff;
+  background: #eef7ff;
+  color: #3d75a8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.mg-mini-btn.is-harvest {
+  background: #ffe8f3;
+  border-color: #ffb3d4;
+  color: #c7477a;
+}
+
+.mg-cook-box {
+  background: #fff;
+  border: 1.5px solid #ffe4c8;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.mg-cook-ingredients {
+  font-size: 0.78rem;
+  color: #8c6a52;
+}
+
+.mg-cook-step {
+  font-size: 0.9rem;
+  color: #6b4694;
+}
+
+.mg-heat-wrap {
+  width: 100%;
+  max-width: 280px;
+}
+
+.mg-heat-track {
+  position: relative;
+  height: 14px;
+  border-radius: 8px;
+  background: #f0e4f8;
+  overflow: hidden;
+}
+
+.mg-heat-zone {
+  position: absolute;
+  left: 45%;
+  width: 43%;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 200, 70, 0.55);
+}
+
+.mg-heat-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: #e8638a;
+  border-radius: 3px;
+  transform: translateX(-50%);
+}
+
+.mg-heat-label {
+  font-size: 0.72rem;
+  color: #9e7ab5;
+  margin-top: 4px;
+}
+
+.mg-error {
+  font-size: 0.76rem;
+  color: #d94c6e;
+  font-weight: 700;
+}
+
+.mg-puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+.mg-puzzle-tile {
+  height: 68px;
+  border-radius: 12px;
+  border: 2px solid #e4d4ff;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.mg-puzzle-tile.is-movable {
+  border-color: #c084fc;
+  background: #fdf6ff;
+}
+
+.mg-puzzle-tile.is-empty {
+  background: #f4ecfa;
+  border-style: dashed;
+  cursor: default;
+}
+
+.mg-pt-emoji {
+  font-size: 1.3rem;
+}
+
+.mg-pt-num {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #8f6bb5;
+}
